@@ -1,4 +1,4 @@
-﻿using LibraryManagementSystem.admin.Interfaces;
+using LibraryManagementSystem.admin.Interfaces;
 using LibraryManagementSystem.admin.Services;
 using LibraryManagementSystem.Interfaces;
 using LibraryManagementSystem.Models;
@@ -20,12 +20,12 @@ public class Program
         // Get connection string from appsettings.json or environment variables
         var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 
-        // Add DbContext with MySQL, auto-detect server version
+        // Add DbContext with MySQL
         builder.Services.AddDbContext<Sql12792576Context>(options =>
             options.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString))
         );
 
-        // Register your services
+        // Register services
         builder.Services.AddScoped<IUserService, UserService>();
         builder.Services.AddScoped<IAuthorService, AuthorService>();
         builder.Services.AddScoped<IGenreService, GenreService>();
@@ -54,7 +54,7 @@ public class Program
 
         builder.Services.AddAuthorization();
 
-        // CORS policy - allow any origin (adjust for production!)
+        // CORS policy
         builder.Services.AddCors(options =>
         {
             options.AddPolicy("AllowAll", policy =>
@@ -97,7 +97,7 @@ public class Program
 
         var app = builder.Build();
 
-        // Use Swagger in Development environment
+        // Swagger in development
         if (app.Environment.IsDevelopment())
         {
             app.UseSwagger();
@@ -106,22 +106,20 @@ public class Program
 
         app.UseCors("AllowAll");
 
-        app.UseHttpsRedirection();
+        // Optional: Disable this if you're getting redirect issues
+        // app.UseHttpsRedirection();
 
         app.UseAuthentication();
         app.UseAuthorization();
 
+        // Root test endpoint
+        app.MapGet("/", () => "Hello from ASP.NET on Render!");
+
+        // Map API controllers
         app.MapControllers();
 
-        // ** Listen on port 80 for Render deployment **
+        // Make sure it listens on port 80 for Render
         app.Urls.Add("http://0.0.0.0:80");
-
-        var app = WebApplication.CreateBuilder(args).Build();
-
-app.MapGet("/", () => "Hello from ASP.NET on Render!");
-
-app.Run();
-
 
         app.Run();
     }
