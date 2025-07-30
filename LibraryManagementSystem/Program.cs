@@ -113,6 +113,9 @@ public class Program
 
         app.MapControllers();
 
+        // ** Listen on port 80 for Render deployment **
+        app.Urls.Add("http://0.0.0.0:80");
+
         app.Run();
     }
 }
