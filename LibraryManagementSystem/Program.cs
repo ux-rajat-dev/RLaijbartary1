@@ -116,6 +116,13 @@ public class Program
         // ** Listen on port 80 for Render deployment **
         app.Urls.Add("http://0.0.0.0:80");
 
+        var app = WebApplication.CreateBuilder(args).Build();
+
+app.MapGet("/", () => "Hello from ASP.NET on Render!");
+
+app.Run();
+
+
         app.Run();
     }
 }
